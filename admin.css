@@ -1,3 +1,83 @@
+/* LOGIN GATE */
+.admin-login {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at center, rgba(245,197,24,0.10), transparent 60%),
+    var(--bg);
+}
+.admin-login::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(212,160,23,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,160,23,0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+  pointer-events: none;
+}
+.admin-login__card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--gold-deep);
+  border-radius: 16px;
+  padding: 40px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow:
+    0 30px 80px -20px rgba(245,197,24,0.35),
+    0 8px 20px rgba(0,0,0,0.5);
+}
+.admin-login__logo {
+  margin-bottom: 4px;
+  filter: drop-shadow(0 4px 16px rgba(245,197,24,0.5));
+}
+.admin-login__title {
+  font-family: var(--font-display);
+  font-size: 38px;
+  background: linear-gradient(180deg, var(--gold-2), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.admin-login__sub {
+  font-family: var(--font-head);
+  letter-spacing: 0.25em;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.admin-login__err {
+  font-family: var(--font-head);
+  letter-spacing: 0.18em;
+  color: #ff6b80;
+  font-size: 12px;
+  height: 16px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.admin-login__back {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.admin-login__back:hover { color: var(--gold-2); }
+
 /* ADMIN — same gold/coal palette, but utilitarian & dense */
 
 .admin-body { background: var(--bg); color: var(--text); min-height: 100vh; }

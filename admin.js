@@ -1,5 +1,60 @@
 /* GOLD MINERS — admin panel logic */
 
+/* ============================================================
+   PASSWORD GATE
+   Default password: goldminers2026
+   To change: pick a new password, run this in your browser console:
+     crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_NEW_PASSWORD'))
+       .then(b => console.log(Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')));
+   Then replace ADMIN_PASSWORD_HASH below.
+   ============================================================ */
+const ADMIN_PASSWORD_HASH = '1f888fc99f974a31aa5c8d0adcfafc85de179813f19f063f67bc42ab6bb1a5c3';
+const AUTH_KEY = 'goldminers_admin_auth_v1';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function showAdminUI() {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-app').style.display = '';
+}
+
+function showLoginUI() {
+  document.getElementById('admin-app').style.display = 'none';
+  document.getElementById('admin-login').style.display = 'flex';
+  setTimeout(() => document.getElementById('admin-pw')?.focus(), 50);
+}
+
+(function bootGate() {
+  if (sessionStorage.getItem(AUTH_KEY) === 'ok') {
+    showAdminUI();
+  } else {
+    showLoginUI();
+  }
+  const form = document.getElementById('admin-login-form');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pw = document.getElementById('admin-pw').value;
+    const err = document.getElementById('admin-pw-err');
+    err.style.opacity = '0';
+    const hash = await sha256(pw);
+    if (hash === ADMIN_PASSWORD_HASH) {
+      sessionStorage.setItem(AUTH_KEY, 'ok');
+      showAdminUI();
+    } else {
+      err.textContent = 'WRONG PASSWORD';
+      err.style.opacity = '1';
+      document.getElementById('admin-pw').value = '';
+    }
+  });
+  document.getElementById('admin-logout')?.addEventListener('click', () => {
+    sessionStorage.removeItem(AUTH_KEY);
+    location.reload();
+  });
+})();
+
 const GM = window.GoldMiners;
 const adminLoad = GM.loadData;
 const adminSave = GM.saveData;
