@@ -89,14 +89,29 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 /* ---------------- SETTINGS ---------------- */
 
-document.getElementById('fb-url').value = state.settings.fbUrl;
-document.getElementById('stat-paid').value = state.settings.statPaid;
-document.getElementById('stat-players').value = state.settings.statPlayers;
+function loadSettingsForm() {
+  document.getElementById('fb-url').value = state.settings.fbUrl || '';
+  document.getElementById('stat-paid').value = state.settings.statPaid || '';
+  document.getElementById('stat-players').value = state.settings.statPlayers || '';
+  document.getElementById('freebar-show').value = state.settings.freebarShow === false ? 'false' : 'true';
+  document.getElementById('freebar-text').value = state.settings.freebarText || '';
+  document.getElementById('freebar-sub').value = state.settings.freebarSubtext || '';
+  document.getElementById('freebar-cta').value = state.settings.freebarCta || '';
+  document.getElementById('ticker-show').value = state.settings.tickerShow === false ? 'false' : 'true';
+  document.getElementById('ticker-text').value = state.settings.tickerText || '';
+}
+loadSettingsForm();
 
 document.getElementById('save-settings').addEventListener('click', () => {
   state.settings.fbUrl = document.getElementById('fb-url').value.trim();
   state.settings.statPaid = document.getElementById('stat-paid').value.trim();
   state.settings.statPlayers = document.getElementById('stat-players').value.trim();
+  state.settings.freebarShow = document.getElementById('freebar-show').value !== 'false';
+  state.settings.freebarText = document.getElementById('freebar-text').value.trim();
+  state.settings.freebarSubtext = document.getElementById('freebar-sub').value.trim();
+  state.settings.freebarCta = document.getElementById('freebar-cta').value.trim();
+  state.settings.tickerShow = document.getElementById('ticker-show').value !== 'false';
+  state.settings.tickerText = document.getElementById('ticker-text').value.trim();
   persist();
 });
 
@@ -412,6 +427,20 @@ document.querySelectorAll('[data-add]').forEach(btn => {
 
 /* ---------------- IMPORT / EXPORT / RESET ---------------- */
 
+document.getElementById('btn-save-all').addEventListener('click', () => {
+  // Pull current settings form values into state, then save
+  state.settings.fbUrl = document.getElementById('fb-url').value.trim();
+  state.settings.statPaid = document.getElementById('stat-paid').value.trim();
+  state.settings.statPlayers = document.getElementById('stat-players').value.trim();
+  state.settings.freebarShow = document.getElementById('freebar-show').value !== 'false';
+  state.settings.freebarText = document.getElementById('freebar-text').value.trim();
+  state.settings.freebarSubtext = document.getElementById('freebar-sub').value.trim();
+  state.settings.freebarCta = document.getElementById('freebar-cta').value.trim();
+  state.settings.tickerShow = document.getElementById('ticker-show').value !== 'false';
+  state.settings.tickerText = document.getElementById('ticker-text').value.trim();
+  persist();
+});
+
 document.getElementById('btn-export').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -461,9 +490,7 @@ function escAttr(s) {
 /* ---------------- INIT ---------------- */
 
 function renderAll() {
-  document.getElementById('fb-url').value = state.settings.fbUrl;
-  document.getElementById('stat-paid').value = state.settings.statPaid;
-  document.getElementById('stat-players').value = state.settings.statPlayers;
+  loadSettingsForm();
   renderBonusList();
   renderGameList();
   renderFreeplayList();

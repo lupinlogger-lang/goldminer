@@ -6,7 +6,13 @@ const DEFAULTS = {
   settings: {
     fbUrl: 'https://www.facebook.com/your-page-here',
     statPaid: '$2.4M+',
-    statPlayers: '12,800+'
+    statPlayers: '12,800+',
+    freebarShow: true,
+    freebarText: 'GET $5 FREE PLAY',
+    freebarSubtext: 'Redeemable instantly on Messenger',
+    freebarCta: 'CLAIM NOW',
+    tickerShow: true,
+    tickerText: 'DAILY FREEPLAYS ★ INSTANT CASHOUTS ★ 24/7 SUPPORT ★ JOIN OUR FB GROUP ★ NEW PLAYER MATCH 200%'
   },
   bonuses: [
     { id: 'b1', icon: '🎁', amount: '$500', title: 'Welcome Match',     desc: '200% match on your first deposit. Bigger pickaxe, deeper vein.', badge: 'HOT', cta: 'Claim Bonus' },
@@ -213,6 +219,42 @@ function renderStats() {
   if (m) m.textContent = data.settings.statPlayers;
 }
 
+function renderTicker() {
+  const ticker = document.getElementById('ticker');
+  const track = document.getElementById('ticker-track');
+  if (!ticker || !track) return;
+  const s = data.settings;
+  if (s.tickerShow === false) {
+    ticker.style.display = 'none';
+    return;
+  }
+  ticker.style.display = '';
+  const text = (s.tickerText || '').trim() || 'DAILY FREEPLAYS ★ INSTANT CASHOUTS';
+  const decorated = '★ ' + text.replace(/\s*★\s*/g, ' ★ ') + ' ';
+  const repeated = decorated.repeat(4);
+  track.innerHTML = `<span>${escHTML(repeated)}</span><span>${escHTML(repeated)}</span>`;
+}
+
+function renderFreebar() {
+  const bar = document.getElementById('freebar');
+  if (!bar) return;
+  const s = data.settings;
+  if (s.freebarShow === false) {
+    bar.classList.add('is-hidden');
+    return;
+  }
+  const t = document.getElementById('freebar-text');
+  const sub = document.getElementById('freebar-sub');
+  const cta = document.getElementById('freebar-cta');
+  if (t && s.freebarText) t.textContent = s.freebarText;
+  if (sub && s.freebarSubtext) sub.firstChild ? (sub.textContent = s.freebarSubtext) : sub.textContent = s.freebarSubtext;
+  if (cta && s.freebarCta) {
+    const svg = cta.querySelector('svg');
+    cta.textContent = s.freebarCta + ' ';
+    if (svg) cta.appendChild(svg);
+  }
+}
+
 /* ---------------- INTERACTIONS ---------------- */
 
 function buildParticles() {
@@ -297,6 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCashouts();
   renderReviews();
   renderStats();
+  renderTicker();
+  renderFreebar();
   buildParticles();
   setupReveal();
   setupNav();
