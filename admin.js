@@ -171,7 +171,7 @@ function renderBonusList() {
       <label class="field" style="margin-top:14px"><span>CTA Text</span><input data-k="cta" value="${escAttr(b.cta)}"/></label>
     `;
     item.querySelector('.item__del').addEventListener('click', () => {
-      state.bonuses.splice(idx, 1); persist(); renderBonusList();
+      if (!confirm('Delete this bonus?')) return; state.bonuses.splice(idx, 1); adminSave(state); toast('DELETED'); renderBonusList();
     });
     item.querySelectorAll('[data-k]').forEach(input => {
       input.addEventListener('input', () => {
@@ -241,7 +241,7 @@ function renderGameList() {
     }));
 
     item.querySelector('.item__del').addEventListener('click', () => {
-      state.games.splice(idx, 1); persist(); renderGameList();
+      if (!confirm('Delete this game?')) return; state.games.splice(idx, 1); adminSave(state); toast('DELETED'); renderGameList();
     });
 
     item.querySelectorAll('[data-k]').forEach(input => {
@@ -291,7 +291,7 @@ function renderFreeplayList() {
       <label class="field" style="margin-top:14px"><span>Description</span><textarea data-k="desc">${escHTML(f.desc)}</textarea></label>
     `;
     item.querySelector('.item__del').addEventListener('click', () => {
-      state.freeplays.splice(idx, 1); persist(); renderFreeplayList();
+      if (!confirm('Delete this freeplay?')) return; state.freeplays.splice(idx, 1); adminSave(state); toast('DELETED'); renderFreeplayList();
     });
     item.querySelectorAll('[data-k]').forEach(input => {
       input.addEventListener('input', () => {
@@ -341,7 +341,7 @@ function renderCashoutList() {
       }
     }));
     item.querySelector('.item__del').addEventListener('click', () => {
-      state.cashouts.splice(idx, 1); persist(); renderCashoutList();
+      if (!confirm('Delete this cashout?')) return; state.cashouts.splice(idx, 1); adminSave(state); toast('DELETED'); renderCashoutList();
     });
     item.querySelectorAll('[data-k]').forEach(input => {
       input.addEventListener('input', () => {
@@ -382,7 +382,7 @@ function renderReviewList() {
       <label class="field" style="margin-top:14px"><span>Review Text</span><textarea data-k="text">${escHTML(r.text)}</textarea></label>
     `;
     item.querySelector('.item__del').addEventListener('click', () => {
-      state.reviews.splice(idx, 1); persist(); renderReviewList();
+      if (!confirm('Delete this review?')) return; state.reviews.splice(idx, 1); adminSave(state); toast('DELETED'); renderReviewList();
     });
     item.querySelectorAll('[data-k]').forEach(input => {
       input.addEventListener('input', () => {
