@@ -427,8 +427,8 @@ document.querySelectorAll('[data-add]').forEach(btn => {
 
 /* ---------------- IMPORT / EXPORT / RESET ---------------- */
 
-document.getElementById('btn-save-all').addEventListener('click', () => {
-  // Pull current settings form values into state, then save
+document.getElementById('btn-save-all').addEventListener('click', async () => {
+  // Pull current settings form values into state
   state.settings.fbUrl = document.getElementById('fb-url').value.trim();
   state.settings.statPaid = document.getElementById('stat-paid').value.trim();
   state.settings.statPlayers = document.getElementById('stat-players').value.trim();
@@ -438,7 +438,33 @@ document.getElementById('btn-save-all').addEventListener('click', () => {
   state.settings.freebarCta = document.getElementById('freebar-cta').value.trim();
   state.settings.tickerShow = document.getElementById('ticker-show').value !== 'false';
   state.settings.tickerText = document.getElementById('ticker-text').value.trim();
-  persist();
+
+  adminSave(state); // local cache for instant UI feedback
+
+  // Push to live site via /api/save
+  const pw = prompt('Password to push live:', '');
+  if (!pw) {
+    toast('SAVED LOCALLY ONLY');
+    return;
+  }
+  toast('PUSHING LIVE…');
+  try {
+    const r = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, data: state })
+    });
+    const j = await r.json();
+    if (!r.ok) {
+      console.error(j);
+      toast('FAIL: ' + (j.error || r.status));
+      return;
+    }
+    toast('LIVE IN ~30s ✓');
+  } catch (e) {
+    console.error(e);
+    toast('NETWORK ERROR');
+  }
 });
 
 document.getElementById('btn-export').addEventListener('click', () => {
